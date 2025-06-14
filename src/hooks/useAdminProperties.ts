@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminRoles } from '@/hooks/useAdminRoles';
@@ -32,7 +32,7 @@ export const useAdminProperties = () => {
   const [loading, setLoading] = useState(false);
 
   // Fetch all properties for admin review
-  const fetchAllProperties = async () => {
+  const fetchAllProperties = useCallback(async () => {
     if (!isAdmin()) return;
 
     try {
@@ -54,7 +54,7 @@ export const useAdminProperties = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [isAdmin]);
 
   // Update property status
   const updatePropertyStatus = async (propertyId: string, status: string, adminNotes?: string) => {
@@ -84,7 +84,6 @@ export const useAdminProperties = () => {
       });
 
       await logAdminActivity('update_property_status', 'property', propertyId, { status, adminNotes });
-      fetchAllProperties();
       return true;
     } catch (error: any) {
       console.error('Error updating property status:', error);
@@ -119,7 +118,6 @@ export const useAdminProperties = () => {
       });
 
       await logAdminActivity('toggle_featured', 'property', propertyId, { featured });
-      fetchAllProperties();
       return true;
     } catch (error: any) {
       console.error('Error toggling featured status:', error);
@@ -150,7 +148,6 @@ export const useAdminProperties = () => {
       });
 
       await logAdminActivity('delete_property', 'property', propertyId);
-      fetchAllProperties();
       return true;
     } catch (error: any) {
       console.error('Error deleting property:', error);
@@ -173,11 +170,62 @@ export const useAdminProperties = () => {
     return properties.filter(property => property.featured);
   };
 
+  // Real-time updates for admin properties
   useEffect(() => {
-    if (isAdmin()) {
-      fetchAllProperties();
-    }
-  }, [isAdmin]);
+    if (!isAdmin()) return;
+
+    console.log('Setting up admin real-time property updates...');
+    
+    // Initial fetch
+    fetchAllProperties();
+
+    // Set up real-time subscription
+    const channel = supabase
+      .channel('admin-properties-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'properties'
+        },
+        (payload) => {
+          console.log('Admin real-time property update:', payload);
+          
+          setProperties(currentProperties => {
+            const newProperties = [...currentProperties];
+            
+            switch (payload.eventType) {
+              case 'INSERT':
+                if (!newProperties.find(p => p.id === payload.new.id)) {
+                  newProperties.unshift(payload.new as AdminProperty);
+                }
+                break;
+                
+              case 'UPDATE':
+                const updateIndex = newProperties.findIndex(p => p.id === payload.new.id);
+                if (updateIndex !== -1) {
+                  newProperties[updateIndex] = payload.new as AdminProperty;
+                }
+                break;
+                
+              case 'DELETE':
+                return newProperties.filter(p => p.id !== payload.old.id);
+            }
+            
+            return newProperties;
+          });
+        }
+      )
+      .subscribe((status) => {
+        console.log('Admin properties subscription status:', status);
+      });
+
+    return () => {
+      console.log('Cleaning up admin properties subscription...');
+      supabase.removeChannel(channel);
+    };
+  }, [isAdmin, fetchAllProperties]);
 
   return {
     properties,
