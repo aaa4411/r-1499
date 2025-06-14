@@ -12,6 +12,7 @@ interface FurnitureTabsProps {
   setSelectedCategory: (cat: string) => void;
   filteredItems: any[];
   handleAddToCart: (id: string) => void;
+  handleViewDetails: (item: any) => void;
 }
 
 const FurnitureTabs: React.FC<FurnitureTabsProps> = ({
@@ -19,6 +20,7 @@ const FurnitureTabs: React.FC<FurnitureTabsProps> = ({
   setSelectedCategory,
   filteredItems,
   handleAddToCart,
+  handleViewDetails,
 }) => {
   // Helper to append cache-busting param
   const appendCacheBuster = (url: string) =>
@@ -63,7 +65,11 @@ const FurnitureTabs: React.FC<FurnitureTabsProps> = ({
                     <p className="text-2xl font-medium text-estate-800">{item.price}</p>
                   </CardContent>
                   <CardFooter className="flex justify-between">
-                    <Button variant="outline" className="w-1/2 mr-2">
+                    <Button 
+                      variant="outline" 
+                      className="w-1/2 mr-2"
+                      onClick={() => handleViewDetails(item)}
+                    >
                       Details
                     </Button>
                     <Button
@@ -88,4 +94,3 @@ const FurnitureTabs: React.FC<FurnitureTabsProps> = ({
 };
 
 export default FurnitureTabs;
-

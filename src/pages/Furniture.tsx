@@ -8,6 +8,7 @@ import FurnitureCart from "@/components/furniture/FurnitureCart";
 import FurnitureServiceSheet from "@/components/furniture/FurnitureServiceSheet";
 import FurnitureTabs from "@/components/furniture/FurnitureTabs";
 import FurnitureServiceCard from "@/components/furniture/FurnitureServiceCard";
+import FurnitureDetailsModal from "@/components/furniture/FurnitureDetailsModal";
 import { toast } from "@/hooks/use-toast";
 
 // Main Furniture Page Refactored
@@ -16,6 +17,8 @@ const Furniture = () => {
   const [selectedCategory, setSelectedCategory] = useState("living");
   const [searchQuery, setSearchQuery] = useState("");
   const [cartItems, setCartItems] = useState<string[]>([]);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const serviceTriggerRef = useRef<HTMLButtonElement>(null);
 
   const handleAddToCart = (itemId: string) => {
@@ -24,6 +27,16 @@ const Furniture = () => {
       title: "Added to cart",
       description: "Item has been added to your cart",
     });
+  };
+
+  const handleViewDetails = (item: any) => {
+    setSelectedItem(item);
+    setIsDetailsModalOpen(true);
+  };
+
+  const handleCloseDetails = () => {
+    setIsDetailsModalOpen(false);
+    setSelectedItem(null);
   };
 
   // Filter items based on search
@@ -71,6 +84,7 @@ const Furniture = () => {
               setSelectedCategory={setSelectedCategory}
               filteredItems={filteredItems}
               handleAddToCart={handleAddToCart}
+              handleViewDetails={handleViewDetails}
             />
           </div>
           <div className="w-full md:w-1/4">
@@ -78,6 +92,14 @@ const Furniture = () => {
           </div>
         </div>
       </div>
+      
+      <FurnitureDetailsModal
+        isOpen={isDetailsModalOpen}
+        onClose={handleCloseDetails}
+        item={selectedItem}
+        onAddToCart={handleAddToCart}
+      />
+      
       <Footer />
     </div>
   );
