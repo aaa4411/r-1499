@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -75,6 +76,70 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  /* Mobile-specific utilities */
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* Enhanced mobile gestures */
+  .swipe-hint {
+    @apply relative;
+  }
+  
+  .swipe-hint::after {
+    content: '';
+    @apply absolute inset-0 opacity-0 bg-gradient-to-r from-transparent via-white/20 to-transparent;
+    animation: swipe-hint 2s ease-in-out infinite;
+  }
+  
+  /* Mobile-optimized animations */
+  @media (prefers-reduced-motion: no-preference) {
+    .mobile-slide-up {
+      animation: mobile-slide-up 0.3s ease-out;
+    }
+    
+    .mobile-fade-in {
+      animation: mobile-fade-in 0.2s ease-out;
+    }
+  }
+}
+
+@keyframes swipe-hint {
+  0%, 100% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes mobile-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobile-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

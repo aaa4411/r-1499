@@ -5,15 +5,14 @@ import AboutUs from "@/components/AboutUs";
 import OurVision from "@/components/OurVision";
 import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
+import AppLayout from "@/components/layouts/AppLayout";
 import { Link } from "react-router-dom";
 import { Armchair, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
+    <AppLayout>
       <Hero />
       
       <section id="properties" className="py-32 bg-gray-50">
@@ -92,7 +91,7 @@ const Index = () => {
       <OurVision />
       <Testimonials />
       <Footer />
-    </div>
+    </AppLayout>
   );
 };
 

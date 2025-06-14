@@ -1,133 +1,173 @@
 
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminRoles } from '@/hooks/useAdminRoles';
 import { Button } from '@/components/ui/button';
 import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-import { Menu, LogIn, LogOut, UserCircle, Home, Shield } from 'lucide-react';
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
+import { Badge } from '@/components/ui/badge';
+import { Menu, LogIn, LogOut, UserCircle, Home, Shield, Heart, Search, Plus, Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import RealtimeNotifications from '../realtime/RealtimeNotifications';
 
 export const MobileNavigation: React.FC = () => {
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminRoles();
 
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
+    setOpen(false);
   };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    setOpen(false);
+  };
+
+  const isActive = (path: string) => location.pathname === path;
+
+  const mainNavItems = [
+    { path: "/", label: "Home", icon: Home },
+    { path: "/properties", label: "Properties", icon: Search },
+    { path: "/furniture", label: "Furniture", icon: UserCircle },
+    { path: "/services", label: "Services", icon: Shield },
+    { path: "/about", label: "About", icon: UserCircle },
+    { path: "/contact", label: "Contact", icon: UserCircle },
+  ];
 
   return (
     <div className="md:hidden">
-      <Sheet>
-        <SheetTrigger asChild>
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerTrigger asChild>
           <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 transition-all duration-200">
             <Menu className="h-6 w-6" />
           </Button>
-        </SheetTrigger>
-        <SheetContent className="bg-white">
-          <div className="flex flex-col space-y-6 mt-12">
-            <Link 
-              to="/properties" 
-              className="text-lg font-medium hover:text-estate-800 transition-colors duration-200"
-            >
-              Properties
-            </Link>
-            <Link 
-              to="/furniture" 
-              className="text-lg font-medium hover:text-estate-800 transition-colors duration-200"
-            >
-              Furniture
-            </Link>
-            <Link 
-              to="/services" 
-              className="text-lg font-medium hover:text-estate-800 transition-colors duration-200"
-            >
-              Services
-            </Link>
-            <Link 
-              to="/about" 
-              className="text-lg font-medium hover:text-estate-800 transition-colors duration-200"
-            >
-              About
-            </Link>
-            <Link 
-              to="/#testimonials" 
-              className="text-lg font-medium hover:text-estate-800 transition-colors duration-200"
-            >
-              Testimonials
-            </Link>
-            <Link 
-              to="/contact" 
-              className="text-lg font-medium hover:text-estate-800 transition-colors duration-200"
-            >
-              Contact
-            </Link>
-            
-            {user ? (
-              <div className="space-y-4 pt-4 border-t">
-                <div className="px-1">
-                  <div className="text-sm text-gray-500">Signed in as</div>
-                  <div className="font-medium truncate">{user?.user_metadata?.name || user?.email}</div>
+        </DrawerTrigger>
+        <DrawerContent className="h-[85vh]">
+          <DrawerHeader className="text-left">
+            <DrawerTitle className="text-xl font-display">Menu</DrawerTitle>
+          </DrawerHeader>
+          
+          <div className="flex flex-col h-full px-4 pb-6">
+            {/* User Info Section */}
+            {user && (
+              <div className="bg-estate-50 rounded-lg p-4 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-estate-200 rounded-full flex items-center justify-center">
+                    <UserCircle className="h-6 w-6 text-estate-600" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-medium text-estate-800 truncate">
+                      {user?.user_metadata?.name || user?.email}
+                    </div>
+                    <div className="text-sm text-estate-500">
+                      {isAdmin() && <Badge variant="secondary" className="text-xs">Admin</Badge>}
+                    </div>
+                  </div>
+                  <RealtimeNotifications />
                 </div>
-                <Button 
-                  className="w-full bg-estate-800 hover:bg-estate-700 text-white font-semibold shadow-md transition-all duration-200 hover:shadow-lg"
-                  onClick={() => navigate("/dashboard")}
-                >
-                  <UserCircle className="h-4 w-4 mr-2" />
-                  Dashboard
-                </Button>
-                <Button 
-                  className="w-full bg-estate-800 hover:bg-estate-700 text-white font-semibold shadow-md transition-all duration-200 hover:shadow-lg"
-                  onClick={() => navigate("/add-property")}
-                >
-                  <Home className="h-4 w-4 mr-2" />
-                  Add Property
-                </Button>
-                {isAdmin() && (
-                  <Button 
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md transition-all duration-200 hover:shadow-lg"
-                    onClick={() => navigate("/admin")}
-                  >
-                    <Shield className="h-4 w-4 mr-2" />
-                    Admin Panel
-                  </Button>
-                )}
-                <Button 
-                  variant="outline"
-                  className="w-full border-estate-800 text-estate-800 hover:bg-estate-50 transition-all duration-200"
-                  onClick={handleSignOut}
-                >
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
-                </Button>
-              </div>
-            ) : (
-              <div className="space-y-4 pt-4 border-t">
-                <Button 
-                  variant="outline"
-                  className="w-full border-estate-800 text-estate-800 hover:bg-estate-50 transition-all duration-200"
-                  onClick={() => navigate("/login")}
-                >
-                  <LogIn className="h-4 w-4 mr-2" />
-                  Sign In
-                </Button>
-                <Button 
-                  className="w-full bg-estate-800 hover:bg-estate-700 text-white font-semibold shadow-md transition-all duration-200 hover:shadow-lg"
-                  onClick={() => navigate("/register")}
-                >
-                  Sign Up
-                </Button>
               </div>
             )}
+
+            {/* Main Navigation */}
+            <div className="space-y-2 mb-6">
+              {mainNavItems.map((item) => (
+                <button
+                  key={item.path}
+                  onClick={() => handleNavigation(item.path)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    isActive(item.path)
+                      ? 'bg-estate-100 text-estate-800 font-medium'
+                      : 'hover:bg-gray-50 text-gray-700'
+                  }`}
+                >
+                  <item.icon className="h-5 w-5" />
+                  <span>{item.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Quick Actions */}
+            {user && (
+              <div className="space-y-3 mb-6">
+                <div className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+                  Quick Actions
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button
+                    variant="outline"
+                    className="h-16 flex-col gap-2"
+                    onClick={() => handleNavigation("/add-property")}
+                  >
+                    <Plus className="h-5 w-5" />
+                    <span className="text-xs">Add Property</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="h-16 flex-col gap-2"
+                    onClick={() => handleNavigation("/dashboard")}
+                  >
+                    <UserCircle className="h-5 w-5" />
+                    <span className="text-xs">Dashboard</span>
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Authentication Section */}
+            <div className="mt-auto space-y-3">
+              {user ? (
+                <div className="space-y-3">
+                  {isAdmin() && (
+                    <Button
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={() => handleNavigation("/admin")}
+                    >
+                      <Shield className="h-4 w-4 mr-2" />
+                      Admin Panel
+                    </Button>
+                  )}
+                  <Button
+                    variant="outline"
+                    className="w-full border-red-200 text-red-600 hover:bg-red-50"
+                    onClick={handleSignOut}
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign Out
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => handleNavigation("/login")}
+                  >
+                    <LogIn className="h-4 w-4 mr-2" />
+                    Sign In
+                  </Button>
+                  <Button
+                    className="w-full bg-estate-800 hover:bg-estate-700"
+                    onClick={() => handleNavigation("/register")}
+                  >
+                    Sign Up
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
-        </SheetContent>
-      </Sheet>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };
