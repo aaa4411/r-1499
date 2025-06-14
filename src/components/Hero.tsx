@@ -13,7 +13,7 @@ const Hero = () => {
           backgroundImage: "url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c')",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50 animate-in fade-in duration-1000" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/60 animate-in fade-in duration-1000" />
       </div>
       
       <div className="relative z-10 container mx-auto px-4 h-screen flex flex-col justify-center items-center">
@@ -26,14 +26,15 @@ const Hero = () => {
           
           {/* Animated main heading */}
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-display text-white mb-6 leading-tight tracking-tight animate-in slide-in-from-left duration-1000 delay-500">
-            Find Your Dream <br />
-            <span className="text-gradient bg-gradient-to-r from-white via-white/90 to-white/80 animate-in slide-in-from-right duration-1000 delay-700">
+            Find Your Dream
+            <br />
+            <span className="bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent animate-in slide-in-from-right duration-1000 delay-700">
               Luxury Home
             </span>
           </h1>
           
           {/* Animated description */}
-          <p className="text-lg md:text-xl text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in duration-1000 delay-900">
+          <p className="text-lg md:text-xl text-white/90 mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in duration-1000 delay-900 drop-shadow-sm">
             Discover exceptional properties and sustainable living spaces curated for modern lifestyles.
           </p>
           
@@ -55,8 +56,8 @@ const Hero = () => {
                 key={index} 
                 className={`text-center transform hover:scale-110 transition-all duration-300 animate-in slide-in-from-bottom duration-700 ${stat.delay}`}
               >
-                <p className="text-3xl font-display text-white mb-1 animate-pulse">{stat.value}</p>
-                <p className="text-sm text-white/70">{stat.label}</p>
+                <p className="text-3xl font-display text-white mb-1 drop-shadow-lg">{stat.value}</p>
+                <p className="text-sm text-white/80 drop-shadow-sm">{stat.label}</p>
               </div>
             ))}
           </div>
