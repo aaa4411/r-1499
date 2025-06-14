@@ -36,10 +36,10 @@ const PropertiesLayout = ({
   resetFilters,
 }: PropertiesLayoutProps) => {
   return (
-    <div className="flex flex-col lg:flex-row gap-8">
-      {/* Sidebar */}
-      <div className="lg:w-80 flex-shrink-0">
-        <div className="sticky top-32">
+    <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+      {/* Sidebar - Enhanced for better mobile and desktop experience */}
+      <div className="lg:w-80 xl:w-96 flex-shrink-0">
+        <div className="lg:sticky lg:top-32">
           <FilterSidebar 
             priceRange={priceRange}
             setPriceRange={setPriceRange}
@@ -58,9 +58,11 @@ const PropertiesLayout = ({
         </div>
       </div>
       
-      {/* Main Content */}
+      {/* Main Content - Better responsive spacing */}
       <div className="flex-1 min-w-0">
-        {children}
+        <div className="animate-in fade-in duration-300">
+          {children}
+        </div>
       </div>
     </div>
   );

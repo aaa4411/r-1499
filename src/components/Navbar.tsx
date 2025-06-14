@@ -35,37 +35,72 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`${isHomePage ? 'absolute' : ''} w-full z-50 ${!isHomePage ? 'bg-estate-800 py-4' : ''}`}>
+    <nav className={`${isHomePage ? 'absolute' : 'sticky top-0'} w-full z-50 ${!isHomePage ? 'bg-estate-800/95 backdrop-blur-sm border-b border-estate-700/20 py-4' : ''} transition-all duration-300`}>
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="flex items-center justify-between h-24">
-          <Link to="/" className="text-3xl font-display text-white tracking-wide hover:opacity-90 transition-opacity">Elite Real Estate</Link>
+        <div className="flex items-center justify-between h-16 lg:h-24">
+          <Link 
+            to="/" 
+            className="text-2xl lg:text-3xl font-display text-white tracking-wide hover:opacity-90 transition-all duration-200 hover:scale-105"
+          >
+            Elite Real Estate
+          </Link>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link to="/properties" className="text-white hover:text-white/80 transition-colors font-medium">Properties</Link>
-            <Link to="/about" className="text-white hover:text-white/80 transition-colors font-medium">About</Link>
-            <Link to="/#testimonials" className="text-white hover:text-white/80 transition-colors font-medium">Testimonials</Link>
-            <Link to="/contact" className="text-white hover:text-white/80 transition-colors font-medium">Contact</Link>
+            <Link 
+              to="/properties" 
+              className="text-white hover:text-white/80 transition-all duration-200 font-medium relative group"
+            >
+              Properties
+              <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+            </Link>
+            <Link 
+              to="/about" 
+              className="text-white hover:text-white/80 transition-all duration-200 font-medium relative group"
+            >
+              About
+              <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+            </Link>
+            <Link 
+              to="/#testimonials" 
+              className="text-white hover:text-white/80 transition-all duration-200 font-medium relative group"
+            >
+              Testimonials
+              <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+            </Link>
+            <Link 
+              to="/contact" 
+              className="text-white hover:text-white/80 transition-all duration-200 font-medium relative group"
+            >
+              Contact
+              <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+            </Link>
             
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative rounded-full overflow-hidden bg-white/10 hover:bg-white/20">
+                  <Button variant="ghost" size="icon" className="relative rounded-full overflow-hidden bg-white/10 hover:bg-white/20 transition-all duration-200 hover:scale-110">
                     <UserCircle className="h-5 w-5 text-white" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-56 bg-white border shadow-lg z-50">
                   <DropdownMenuLabel>
                     <div className="font-normal text-sm text-gray-500">Signed in as</div>
                     <div className="font-medium truncate">{user?.user_metadata?.name || user?.email}</div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+                  <DropdownMenuItem 
+                    onClick={() => navigate("/dashboard")}
+                    className="hover:bg-estate-50 cursor-pointer transition-colors"
+                  >
                     <UserCircle className="h-4 w-4 mr-2" />
                     Dashboard
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut}>
+                  <DropdownMenuItem 
+                    onClick={handleSignOut}
+                    className="hover:bg-estate-50 cursor-pointer transition-colors"
+                  >
                     <LogOut className="h-4 w-4 mr-2" />
                     Sign Out
                   </DropdownMenuItem>
@@ -75,7 +110,7 @@ const Navbar = () => {
               <div className="flex items-center space-x-3">
                 <Button
                   variant="ghost"
-                  className="text-white hover:bg-white/10"
+                  className="text-white hover:bg-white/10 transition-all duration-200 hover:scale-105"
                   onClick={() => navigate("/login")}
                 >
                   <LogIn className="h-4 w-4 mr-2" />
@@ -83,7 +118,7 @@ const Navbar = () => {
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="text-black border-white bg-white hover:bg-white/90 font-semibold shadow-md"
+                  className="text-black border-white bg-white hover:bg-white/90 font-semibold shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg"
                   onClick={() => navigate("/register")}
                 >
                   Sign Up
@@ -96,16 +131,36 @@ const Navbar = () => {
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-white">
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 transition-all duration-200">
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent>
+              <SheetContent className="bg-white">
                 <div className="flex flex-col space-y-6 mt-12">
-                  <Link to="/properties" className="text-lg font-medium">Properties</Link>
-                  <Link to="/about" className="text-lg font-medium">About</Link>
-                  <Link to="/#testimonials" className="text-lg font-medium">Testimonials</Link>
-                  <Link to="/contact" className="text-lg font-medium">Contact</Link>
+                  <Link 
+                    to="/properties" 
+                    className="text-lg font-medium hover:text-estate-800 transition-colors duration-200"
+                  >
+                    Properties
+                  </Link>
+                  <Link 
+                    to="/about" 
+                    className="text-lg font-medium hover:text-estate-800 transition-colors duration-200"
+                  >
+                    About
+                  </Link>
+                  <Link 
+                    to="/#testimonials" 
+                    className="text-lg font-medium hover:text-estate-800 transition-colors duration-200"
+                  >
+                    Testimonials
+                  </Link>
+                  <Link 
+                    to="/contact" 
+                    className="text-lg font-medium hover:text-estate-800 transition-colors duration-200"
+                  >
+                    Contact
+                  </Link>
                   
                   {user ? (
                     <div className="space-y-4 pt-4 border-t">
@@ -114,7 +169,7 @@ const Navbar = () => {
                         <div className="font-medium truncate">{user?.user_metadata?.name || user?.email}</div>
                       </div>
                       <Button 
-                        className="w-full bg-estate-800 hover:bg-estate-700 text-white font-semibold shadow-md"
+                        className="w-full bg-estate-800 hover:bg-estate-700 text-white font-semibold shadow-md transition-all duration-200 hover:shadow-lg"
                         onClick={() => navigate("/dashboard")}
                       >
                         <UserCircle className="h-4 w-4 mr-2" />
@@ -122,7 +177,7 @@ const Navbar = () => {
                       </Button>
                       <Button 
                         variant="outline"
-                        className="w-full border-estate-800 text-estate-800 hover:bg-estate-50"
+                        className="w-full border-estate-800 text-estate-800 hover:bg-estate-50 transition-all duration-200"
                         onClick={handleSignOut}
                       >
                         <LogOut className="h-4 w-4 mr-2" />
@@ -133,14 +188,14 @@ const Navbar = () => {
                     <div className="space-y-4 pt-4 border-t">
                       <Button 
                         variant="outline"
-                        className="w-full border-estate-800 text-estate-800 hover:bg-estate-50"
+                        className="w-full border-estate-800 text-estate-800 hover:bg-estate-50 transition-all duration-200"
                         onClick={() => navigate("/login")}
                       >
                         <LogIn className="h-4 w-4 mr-2" />
                         Sign In
                       </Button>
                       <Button 
-                        className="w-full bg-estate-800 hover:bg-estate-700 text-white font-semibold shadow-md"
+                        className="w-full bg-estate-800 hover:bg-estate-700 text-white font-semibold shadow-md transition-all duration-200 hover:shadow-lg"
                         onClick={() => navigate("/register")}
                       >
                         Sign Up
