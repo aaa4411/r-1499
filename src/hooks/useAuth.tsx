@@ -21,54 +21,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const getSession = async () => {
-      setIsLoading(true);
-      try {
-        const { data, error } = await supabase.auth.getSession();
-        
-        if (error) {
-          console.error('Supabase session error:', error);
-          // Don't throw here, just log the error
-        }
-        
-        setSession(data?.session || null);
-        setUser(data?.session?.user || null);
-      } catch (error) {
-        console.error('Error loading session:', error);
-        // Show toast only if it's not a connection issue
-        if (!(error instanceof Error && error.message.includes('supabaseUrl'))) {
-          toast({
-            title: 'Authentication Error',
-            description: 'Failed to load user session',
-            variant: 'destructive',
-          });
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // Initial session fetch
-    getSession();
-
-    try {
-      // Listen for auth changes
-      const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log('Auth state changed:', event, session);
         setSession(session);
         setUser(session?.user || null);
         setIsLoading(false);
-      });
+      }
+    );
 
-      return () => {
-        if (authListener?.subscription) {
-          authListener.subscription.unsubscribe();
-        }
-      };
-    } catch (error) {
-      console.error('Error setting up auth listener:', error);
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        console.error('Error getting session:', error);
+      }
+      setSession(session);
+      setUser(session?.user || null);
       setIsLoading(false);
-      return () => {};
-    }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {
@@ -97,11 +72,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signUp = async (email: string, password: string, userData?: any) => {
     try {
+      const redirectUrl = `${window.location.origin}/`;
+      
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: userData,
+          emailRedirectTo: redirectUrl
         }
       });
       

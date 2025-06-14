@@ -1,37 +1,16 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// Use placeholder values when environment variables are missing (for development)
-// In production, these should be properly set in the environment
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project-url.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key';
+const supabaseUrl = "https://woxlfyovnvzxakyqviey.supabase.co";
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndveGxmeW92bnZ6eGFreXF2aWV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk5MTI5NjksImV4cCI6MjA2NTQ4ODk2OX0.OHT1gyaTeHAF-xpw5kf2T3HAndBzi4SwEB4CX4jhf9U";
 
-// Log warning if using fallback values
-if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-  console.warn(
-    'Supabase environment variables are missing. Using placeholder values. ' +
-    'Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.'
-  );
-}
-
-let supabaseInstance;
-try {
-  supabaseInstance = createClient(supabaseUrl, supabaseAnonKey);
-} catch (error) {
-  console.error('Failed to initialize Supabase client:', error);
-  // Provide a mock client that doesn't cause the app to crash
-  supabaseInstance = {
-    auth: {
-      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
-      signInWithPassword: () => Promise.resolve({ error: new Error('Supabase not properly configured') }),
-      signUp: () => Promise.resolve({ error: new Error('Supabase not properly configured') }),
-      signOut: () => Promise.resolve({ error: null }),
-    },
-  };
-}
-
-export const supabase = supabaseInstance;
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    storage: localStorage,
+    persistSession: true,
+    autoRefreshToken: true,
+  }
+});
 
 // Types for our Supabase tables
 export type PropertyInsert = {
