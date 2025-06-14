@@ -17,11 +17,11 @@ const AdvancedSearchModal = ({ onSearch }: AdvancedSearchModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [filters, setFilters] = useState({
     keywords: '',
-    propertyType: '',
+    propertyType: 'any',
     minPrice: '',
     maxPrice: '',
-    bedrooms: '',
-    bathrooms: '',
+    bedrooms: 'any',
+    bathrooms: 'any',
     minArea: '',
     maxArea: '',
     yearBuilt: '',
@@ -51,11 +51,11 @@ const AdvancedSearchModal = ({ onSearch }: AdvancedSearchModalProps) => {
   const clearFilters = () => {
     setFilters({
       keywords: '',
-      propertyType: '',
+      propertyType: 'any',
       minPrice: '',
       maxPrice: '',
-      bedrooms: '',
-      bathrooms: '',
+      bedrooms: 'any',
+      bathrooms: 'any',
       minArea: '',
       maxArea: '',
       yearBuilt: '',
@@ -111,6 +111,7 @@ const AdvancedSearchModal = ({ onSearch }: AdvancedSearchModalProps) => {
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="any">Any Type</SelectItem>
                   <SelectItem value="sale">For Sale</SelectItem>
                   <SelectItem value="rent">For Rent</SelectItem>
                   <SelectItem value="house">House</SelectItem>
@@ -152,6 +153,7 @@ const AdvancedSearchModal = ({ onSearch }: AdvancedSearchModalProps) => {
                     <SelectValue placeholder="Any" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="any">Any</SelectItem>
                     <SelectItem value="1">1+</SelectItem>
                     <SelectItem value="2">2+</SelectItem>
                     <SelectItem value="3">3+</SelectItem>
@@ -167,6 +169,7 @@ const AdvancedSearchModal = ({ onSearch }: AdvancedSearchModalProps) => {
                     <SelectValue placeholder="Any" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="any">Any</SelectItem>
                     <SelectItem value="1">1+</SelectItem>
                     <SelectItem value="2">2+</SelectItem>
                     <SelectItem value="3">3+</SelectItem>
