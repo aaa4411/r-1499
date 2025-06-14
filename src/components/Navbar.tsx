@@ -1,10 +1,10 @@
 
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import NavbarBrand from "./navbar/NavbarBrand";
-import DesktopNavigation from "./navbar/DesktopNavigation";
-import MobileNavigation from "./navbar/MobileNavigation";
-import UserMenu from "./navbar/UserMenu";
+import { NavbarBrand } from "./navbar/NavbarBrand";
+import { DesktopNavigation } from "./navbar/DesktopNavigation";
+import { MobileNavigation } from "./navbar/MobileNavigation";
+import { UserMenu } from "./navbar/UserMenu";
 import RealtimeNotifications from "./realtime/RealtimeNotifications";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -21,7 +21,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          <NavbarBrand />
+          <NavbarBrand isHomePage={location.pathname === "/"} />
           
           <DesktopNavigation />
           
@@ -31,7 +31,7 @@ const Navbar = () => {
             
             <UserMenu />
             
-            <MobileNavigation isOpen={isOpen} setIsOpen={setIsOpen} />
+            <MobileNavigation />
           </div>
         </div>
       </div>

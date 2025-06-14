@@ -34,7 +34,7 @@ export const useRealtimeNotifications = () => {
       case 'INSERT':
         toast({
           title: '🏠 New Property Listed',
-          description: `${newData.title} in ${newData.location}`,
+          description: `${newData?.title || 'A new property'} in ${newData?.location || 'Unknown location'}`,
           duration: 5000,
         });
         break;
@@ -42,19 +42,19 @@ export const useRealtimeNotifications = () => {
         if (oldData?.status !== newData?.status) {
           toast({
             title: '📋 Property Status Updated',
-            description: `${newData.title} status changed to ${newData.status}`,
+            description: `${newData?.title || 'A property'} status changed to ${newData?.status || 'updated'}`,
             duration: 5000,
           });
         } else if (oldData?.featured !== newData?.featured && newData?.featured) {
           toast({
             title: '⭐ Featured Property',
-            description: `${newData.title} is now featured!`,
+            description: `${newData?.title || 'A property'} is now featured!`,
             duration: 5000,
           });
         } else {
           toast({
             title: '🔄 Property Updated',
-            description: `${newData.title} has been updated`,
+            description: `${newData?.title || 'A property'} has been updated`,
             duration: 3000,
           });
         }
@@ -94,7 +94,7 @@ export const useRealtimeNotifications = () => {
           console.log('Property change detected:', payload);
           
           const update: PropertyUpdate = {
-            id: payload.new?.id || payload.old?.id,
+            id: (payload.new as any)?.id || (payload.old as any)?.id || 'unknown',
             eventType: payload.eventType as 'INSERT' | 'UPDATE' | 'DELETE',
             new: payload.new,
             old: payload.old
@@ -109,8 +109,8 @@ export const useRealtimeNotifications = () => {
           
           // Show notification for relevant updates
           if (payload.eventType === 'INSERT' || 
-              (payload.eventType === 'UPDATE' && payload.new?.status === 'approved') ||
-              (payload.eventType === 'UPDATE' && payload.new?.featured && !payload.old?.featured)) {
+              (payload.eventType === 'UPDATE' && (payload.new as any)?.status === 'approved') ||
+              (payload.eventType === 'UPDATE' && (payload.new as any)?.featured && !(payload.old as any)?.featured)) {
             showNotification(update);
           }
         }
