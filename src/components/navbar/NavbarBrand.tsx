@@ -10,7 +10,7 @@ export const NavbarBrand: React.FC<NavbarBrandProps> = ({ isHomePage }) => {
   return (
     <Link 
       to="/" 
-      className="text-2xl lg:text-3xl font-display text-white tracking-wide hover:opacity-90 transition-all duration-200 hover:scale-105"
+      className="text-2xl lg:text-3xl font-display text-gray-900 tracking-wide hover:text-gray-700 transition-all duration-200 hover:scale-105"
     >
       Elite Real Estate
     </Link>
