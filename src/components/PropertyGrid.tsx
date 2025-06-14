@@ -7,7 +7,7 @@ import { Property } from "@/types/property";
 
 // Memoized loading skeleton component
 const LoadingSkeleton = memo(() => (
-  <div className="animate-pulse bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl h-[400px] shadow-sm"></div>
+  <div className="animate-pulse bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl h-[350px] sm:h-[400px] shadow-sm"></div>
 ));
 
 LoadingSkeleton.displayName = "LoadingSkeleton";
@@ -131,7 +131,7 @@ const PropertyGrid = memo(({
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-7xl mx-auto px-4">
         {Array.from({ length: 8 }, (_, i) => (
           <div key={i} className="animate-in fade-in duration-300" style={{ animationDelay: `${i * 50}ms` }}>
             <LoadingSkeleton />
@@ -142,12 +142,12 @@ const PropertyGrid = memo(({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto px-4 pb-20">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-7xl mx-auto px-4 pb-20">
       {filteredProperties.map((property, index) => (
         <div 
           key={property.id} 
-          className="animate-in fade-in duration-300 will-change-transform" 
-          style={{ animationDelay: `${index * 50}ms` }}
+          className="animate-in fade-in duration-500 will-change-transform hover:z-10 relative" 
+          style={{ animationDelay: `${index * 100}ms` }}
         >
           <PropertyCard 
             {...property} 
