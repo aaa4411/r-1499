@@ -10,7 +10,7 @@ const Hero = () => {
       <div
         className="absolute inset-0 bg-cover bg-center transform scale-105 animate-in zoom-in duration-700"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c')",
+          backgroundImage: "url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&q=75&fit=crop&w=1920')",
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50 animate-in fade-in duration-1000" />

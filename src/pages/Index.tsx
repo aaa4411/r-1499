@@ -51,17 +51,33 @@ const Index = () => {
               </Link>
             </div>
             <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
-              <div className="aspect-square bg-estate-100 rounded-lg flex items-center justify-center p-4">
-                <img src="/placeholder.svg" alt="Modern sofa" className="max-h-full"/>
+              <div className="aspect-square bg-estate-100 rounded-lg overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&q=75&fit=crop&w=300" 
+                  alt="Modern sofa" 
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <div className="aspect-square bg-estate-200 rounded-lg flex items-center justify-center p-4">
-                <img src="/placeholder.svg" alt="Dining table" className="max-h-full"/>
+              <div className="aspect-square bg-estate-200 rounded-lg overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1549497538-303791108f95?auto=format&q=75&fit=crop&w=300" 
+                  alt="Dining table" 
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <div className="aspect-square bg-estate-200 rounded-lg flex items-center justify-center p-4">
-                <img src="/placeholder.svg" alt="Office desk" className="max-h-full"/>
+              <div className="aspect-square bg-estate-200 rounded-lg overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&q=75&fit=crop&w=300" 
+                  alt="Office desk" 
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <div className="aspect-square bg-estate-100 rounded-lg flex items-center justify-center p-4">
-                <img src="/placeholder.svg" alt="Bedroom set" className="max-h-full"/>
+              <div className="aspect-square bg-estate-100 rounded-lg overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&q=75&fit=crop&w=300" 
+                  alt="Bedroom set" 
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
           </div>
