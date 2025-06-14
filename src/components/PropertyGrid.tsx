@@ -26,8 +26,8 @@ export const mapSupabasePropertyToProperty = (property: SupabaseProperty): Prope
     bathrooms: property.bathrooms,
     area: property.area,
     type: property.type,
-    status: (property as any).status || 'approved',
-    featured: (property as any).featured || false,
+    status: property.status || 'approved',
+    featured: property.featured || false,
   };
 };
 
