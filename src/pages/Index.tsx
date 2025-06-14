@@ -53,7 +53,7 @@ const Index = () => {
             <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
               <div className="aspect-square bg-estate-100 rounded-lg overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80" 
+                  src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80" 
                   alt="Modern sectional sofa" 
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   loading="lazy"
@@ -61,7 +61,7 @@ const Index = () => {
               </div>
               <div className="aspect-square bg-estate-200 rounded-lg overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1549497538-303791108f95?auto=format&fit=crop&w=400&q=80" 
+                  src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&w=400&q=80" 
                   alt="Elegant dining table" 
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   loading="lazy"
@@ -69,16 +69,16 @@ const Index = () => {
               </div>
               <div className="aspect-square bg-estate-200 rounded-lg overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80" 
-                  alt="Modern office desk" 
+                  src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80" 
+                  alt="Modern platform bed" 
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   loading="lazy"
                 />
               </div>
               <div className="aspect-square bg-estate-100 rounded-lg overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&w=400&q=80" 
-                  alt="Luxury bedroom set" 
+                  src="https://images.unsplash.com/photo-1541558869434-2840d308329a?auto=format&fit=crop&w=400&q=80" 
+                  alt="Ergonomic office chair" 
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   loading="lazy"
                 />
