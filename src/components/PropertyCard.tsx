@@ -1,8 +1,10 @@
 
-import { MapPin, Bed, Bath, Square, Home, Tag } from "lucide-react";
+import { MapPin, Bed, Bath, Square, Home, Tag, Scale, Video } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { Link } from "react-router-dom";
 import FavoriteButton from "./FavoriteButton";
+import { Button } from "./ui/button";
+import VirtualTourModal from "./property/VirtualTourModal";
 import { memo } from "react";
 
 interface PropertyCardProps {
@@ -15,6 +17,8 @@ interface PropertyCardProps {
   bathrooms?: number;
   area?: number;
   type?: 'sale' | 'rent';
+  onAddToCompare?: (property: any) => void;
+  images?: string[];
 }
 
 const PropertyCard = memo(({ 
@@ -26,9 +30,20 @@ const PropertyCard = memo(({
   bedrooms,
   bathrooms,
   area,
-  type = 'sale'
+  type = 'sale',
+  onAddToCompare,
+  images = []
 }: PropertyCardProps) => {
   const displayPrice = type === 'rent' ? `${price}/month` : price;
+  const propertyData = { id, image, title, location, price, bedrooms, bathrooms, area, type };
+
+  const handleAddToCompare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onAddToCompare) {
+      onAddToCompare(propertyData);
+    }
+  };
 
   return (
     <Link to={`/property/${id}`} className="block">
@@ -43,25 +58,50 @@ const PropertyCard = memo(({
               decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            
+            {/* Price Badge */}
             <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-estate-800 px-3 py-1.5 text-sm font-medium rounded-lg shadow-sm">
               {displayPrice}
             </div>
+            
+            {/* Type Badge */}
             <div className={`absolute top-3 left-3 ${type === 'sale' ? 'bg-blue-500/95' : 'bg-green-500/95'} backdrop-blur-sm text-white px-3 py-1.5 text-sm font-medium rounded-lg flex items-center gap-1 shadow-sm`}>
               {type === 'sale' ? <Tag className="w-3.5 h-3.5" /> : <Home className="w-3.5 h-3.5" />}
               {type === 'sale' ? 'For Sale' : 'For Rent'}
             </div>
             
-            {/* Optimized favorite button */}
-            <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <FavoriteButton 
-                propertyId={id} 
-                variant="outline" 
-                size="sm"
-                className="bg-white/95 backdrop-blur-sm hover:bg-white shadow-sm"
-                showText={false}
-              />
+            {/* Action Buttons - appear on hover */}
+            <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="flex items-center justify-between">
+                <div className="flex gap-2">
+                  <VirtualTourModal 
+                    propertyTitle={title}
+                    images={images.length > 0 ? images : [image]}
+                  />
+                  {onAddToCompare && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleAddToCompare}
+                      className="bg-white/95 backdrop-blur-sm hover:bg-white shadow-sm flex items-center gap-1"
+                    >
+                      <Scale className="w-3.5 h-3.5" />
+                      Compare
+                    </Button>
+                  )}
+                </div>
+                
+                <FavoriteButton 
+                  propertyId={id} 
+                  variant="outline" 
+                  size="sm"
+                  className="bg-white/95 backdrop-blur-sm hover:bg-white shadow-sm"
+                  showText={false}
+                />
+              </div>
             </div>
           </div>
+          
           <div className="p-5">
             <h3 className="text-lg font-medium text-estate-800 line-clamp-1 group-hover:text-estate-600 transition-colors">
               {title}

@@ -1,3 +1,4 @@
+
 import PropertyCard from "./PropertyCard";
 import { useEffect, useState, memo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -33,13 +34,15 @@ interface PropertyGridProps {
   loading?: boolean;
   filterType?: 'sale' | 'rent' | 'all';
   fromSupabase?: boolean;
+  onAddToCompare?: (property: Property) => void;
 }
 
 const PropertyGrid = memo(({ 
   properties: propProperties, 
   loading = false, 
   filterType = 'all',
-  fromSupabase = false
+  fromSupabase = false,
+  onAddToCompare
 }: PropertyGridProps) => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(loading);
@@ -139,14 +142,18 @@ const PropertyGrid = memo(({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto px-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto px-4 pb-20">
       {filteredProperties.map((property, index) => (
         <div 
           key={property.id} 
           className="animate-in fade-in duration-300 will-change-transform" 
           style={{ animationDelay: `${index * 50}ms` }}
         >
-          <PropertyCard {...property} type={property.type} />
+          <PropertyCard 
+            {...property} 
+            type={property.type} 
+            onAddToCompare={onAddToCompare}
+          />
         </div>
       ))}
     </div>

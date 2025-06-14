@@ -1,10 +1,13 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PropertyGrid from "@/components/PropertyGrid";
 import { SearchForm } from "@/components/properties/SearchForm";
 import { FilterSidebar } from "@/components/properties/FilterSidebar";
+import AdvancedSearchModal from "@/components/property/AdvancedSearchModal";
+import PropertyComparisonBar from "@/components/property/PropertyComparisonBar";
+import PropertyComparisonModal from "@/components/property/PropertyComparisonModal";
 import { usePropertyFilters } from "@/hooks/usePropertyFilters";
+import { usePropertyComparison } from "@/hooks/usePropertyComparison";
 import { useSearchParams } from "react-router-dom";
 import { PropertyType } from "@/types/property";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -43,6 +46,16 @@ const Properties = () => {
     loading
   } = usePropertyFilters(initialSearch, initialType);
 
+  const {
+    compareList,
+    isCompareOpen,
+    setIsCompareOpen,
+    addToCompare,
+    removeFromCompare,
+    clearCompare,
+    openCompare,
+  } = usePropertyComparison();
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery) {
@@ -55,6 +68,21 @@ const Properties = () => {
 
   const toggleMobileFilters = () => {
     setShowMobileFilters(!showMobileFilters);
+  };
+
+  const handleAdvancedSearch = (filters: any) => {
+    // Apply advanced search filters
+    if (filters.keywords) setSearchQuery(filters.keywords);
+    if (filters.propertyType) setPropertyType(filters.propertyType as PropertyType);
+    if (filters.minPrice || filters.maxPrice) {
+      const min = filters.minPrice ? parseInt(filters.minPrice.replace(/[^0-9]/g, '')) : priceRange[0];
+      const max = filters.maxPrice ? parseInt(filters.maxPrice.replace(/[^0-9]/g, '')) : priceRange[1];
+      setPriceRange([min, max]);
+    }
+    if (filters.bedrooms) setBedrooms(filters.bedrooms);
+    if (filters.bathrooms) setBathrooms(filters.bathrooms);
+    if (filters.minArea) setMinArea(parseInt(filters.minArea));
+    if (filters.maxArea) setMaxArea(parseInt(filters.maxArea));
   };
 
   const marketStats = {
@@ -114,20 +142,25 @@ const Properties = () => {
             </div>
           </div>
           
-          {/* Enhanced Search Form */}
+          {/* Enhanced Search Form with Advanced Search */}
           <div className="mb-8">
-            <SearchForm 
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              propertyType={propertyType}
-              setPropertyType={setPropertyType}
-              sortBy={sortBy}
-              setSortBy={setSortBy}
-              handleSearch={handleSearch}
-              searchParams={searchParams}
-              setSearchParams={setSearchParams}
-              toggleMobileFilters={toggleMobileFilters}
-            />
+            <div className="flex flex-col lg:flex-row gap-4 items-end">
+              <div className="flex-1">
+                <SearchForm 
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  propertyType={propertyType}
+                  setPropertyType={setPropertyType}
+                  sortBy={sortBy}
+                  setSortBy={setSortBy}
+                  handleSearch={handleSearch}
+                  searchParams={searchParams}
+                  setSearchParams={setSearchParams}
+                  toggleMobileFilters={toggleMobileFilters}
+                />
+              </div>
+              <AdvancedSearchModal onSearch={handleAdvancedSearch} />
+            </div>
           </div>
           
           <div className="flex flex-col lg:flex-row gap-8">
@@ -252,6 +285,7 @@ const Properties = () => {
                     properties={filteredProperties} 
                     filterType={propertyType === "all" ? undefined : propertyType}
                     fromSupabase={true}
+                    onAddToCompare={addToCompare}
                   />
                 </div>
               ) : (
@@ -272,6 +306,22 @@ const Properties = () => {
           </div>
         </div>
       </div>
+      
+      {/* Property Comparison Features */}
+      <PropertyComparisonBar
+        properties={compareList}
+        onRemoveProperty={removeFromCompare}
+        onCompare={openCompare}
+        onClearAll={clearCompare}
+      />
+      
+      <PropertyComparisonModal
+        isOpen={isCompareOpen}
+        onClose={() => setIsCompareOpen(false)}
+        properties={compareList}
+        onRemoveProperty={removeFromCompare}
+        onClearAll={clearCompare}
+      />
       
       <Footer />
     </div>
