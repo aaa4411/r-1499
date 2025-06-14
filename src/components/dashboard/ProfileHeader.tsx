@@ -3,6 +3,7 @@ import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminRoles } from '@/hooks/useAdminRoles';
 import { AdminBadge } from '@/components/admin/AdminBadge';
+import { AdminNotifications } from '@/components/admin/AdminNotifications';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -43,6 +44,7 @@ const ProfileHeader = () => {
             </div>
           </div>
           <div className="flex items-center space-x-3">
+            {isAdmin() && <AdminNotifications />}
             {isAdmin() && (
               <Link to="/admin">
                 <Button variant="outline" className="flex items-center gap-2">

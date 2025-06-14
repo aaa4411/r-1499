@@ -1,9 +1,9 @@
-
 import * as React from "react";
-import { Menu, LogIn, LogOut, UserCircle, Home } from "lucide-react";
+import { Menu, LogIn, LogOut, UserCircle, Home, Shield } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdminRoles } from "@/hooks/useAdminRoles";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -31,6 +31,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useAdminRoles();
   
   // Determine if this is the home page (for styling)
   const isHomePage = location.pathname === "/";
@@ -76,6 +77,16 @@ const Navbar = () => {
                   Add Property
                   <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
                 </Link>
+                {isAdmin() && (
+                  <Link
+                    to="/admin"
+                    className="text-white hover:text-white/80 transition-all duration-200 font-medium relative group flex items-center gap-1"
+                  >
+                    <Shield className="h-4 w-4" />
+                    Admin Panel
+                    <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+                  </Link>
+                )}
               </>
             )}
             <Link 
@@ -146,6 +157,15 @@ const Navbar = () => {
                     <UserCircle className="h-4 w-4 mr-2" />
                     Dashboard
                   </DropdownMenuItem>
+                  {isAdmin() && (
+                    <DropdownMenuItem 
+                      onClick={() => navigate("/admin")}
+                      className="hover:bg-estate-50 cursor-pointer transition-colors"
+                    >
+                      <Shield className="h-4 w-4 mr-2" />
+                      Admin Panel
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     onClick={handleSignOut}
@@ -244,6 +264,15 @@ const Navbar = () => {
                         <Home className="h-4 w-4 mr-2" />
                         Add Property
                       </Button>
+                      {isAdmin() && (
+                        <Button 
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md transition-all duration-200 hover:shadow-lg"
+                          onClick={() => navigate("/admin")}
+                        >
+                          <Shield className="h-4 w-4 mr-2" />
+                          Admin Panel
+                        </Button>
+                      )}
                       <Button 
                         variant="outline"
                         className="w-full border-estate-800 text-estate-800 hover:bg-estate-50 transition-all duration-200"
