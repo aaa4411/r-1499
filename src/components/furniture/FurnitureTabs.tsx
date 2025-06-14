@@ -34,11 +34,12 @@ const FurnitureTabs: React.FC<FurnitureTabsProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredItems.map((item) => (
                 <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-square bg-gray-100 relative">
+                  <div className="aspect-square bg-gray-100 relative overflow-hidden">
                     <img 
-                      src={`/${item.image}`} 
+                      src={item.image} 
                       alt={item.name} 
-                      className="object-cover w-full h-full" 
+                      className="object-cover w-full h-full hover:scale-105 transition-transform duration-300" 
+                      loading="lazy"
                     />
                   </div>
                   <CardHeader>
