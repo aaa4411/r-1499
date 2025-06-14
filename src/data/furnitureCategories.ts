@@ -1,4 +1,3 @@
-
 import { Sofa, BedDouble, BookOpen, LampFloor } from "lucide-react";
 
 export const furnitureCategories = [
@@ -29,7 +28,7 @@ export const furnitureCategories = [
         id: "lamp1", 
         name: "Floor Lamp", 
         price: "$129", 
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80" 
+        image: "https://images.unsplash.com/photo-1544275223-c2450944d8b9?auto=format&fit=crop&w=800&q=80" 
       },
     ]
   },
@@ -60,7 +59,7 @@ export const furnitureCategories = [
         id: "mirror1", 
         name: "Full-Length Mirror", 
         price: "$199", 
-        image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80" 
+        image: "https://images.unsplash.com/photo-1618221319989-8a41753459d1?auto=format&fit=crop&w=800&q=80" 
       },
     ]
   },
