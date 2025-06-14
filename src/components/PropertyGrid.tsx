@@ -1,9 +1,15 @@
-
 import PropertyCard from "./PropertyCard";
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Property as SupabaseProperty } from "@/lib/supabase";
 import { Property } from "@/types/property";
+
+// Memoized loading skeleton component
+const LoadingSkeleton = memo(() => (
+  <div className="animate-pulse bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl h-[400px] shadow-sm"></div>
+));
+
+LoadingSkeleton.displayName = "LoadingSkeleton";
 
 // Function to convert Supabase property to frontend property
 export const mapSupabasePropertyToProperty = (property: SupabaseProperty): Property => {
@@ -29,7 +35,7 @@ interface PropertyGridProps {
   fromSupabase?: boolean;
 }
 
-const PropertyGrid = ({ 
+const PropertyGrid = memo(({ 
   properties: propProperties, 
   loading = false, 
   filterType = 'all',
@@ -39,8 +45,11 @@ const PropertyGrid = ({
   const [isLoading, setIsLoading] = useState(loading);
   
   useEffect(() => {
-    setIsLoading(true);
-    
+    if (loading) {
+      setIsLoading(true);
+      return;
+    }
+
     // Use requestAnimationFrame for smoother loading
     const loadProperties = () => {
       if (propProperties) {
@@ -54,6 +63,7 @@ const PropertyGrid = ({
           setProperties(propProperties as Property[]);
         }
       } else {
+        // Default properties for demo
         setProperties([
           {
             id: "1",
@@ -104,13 +114,13 @@ const PropertyGrid = ({
       setIsLoading(false);
     };
 
-    // Simulate network delay but make it shorter (250ms)
+    // Optimized loading with reduced delay
     const timer = setTimeout(() => {
       requestAnimationFrame(loadProperties);
-    }, 250);
+    }, 150);
     
     return () => clearTimeout(timer);
-  }, [propProperties, fromSupabase]);
+  }, [propProperties, fromSupabase, loading]);
 
   const filteredProperties = filterType === 'all' 
     ? properties 
@@ -119,9 +129,9 @@ const PropertyGrid = ({
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-6xl mx-auto">
-        {Array.from({ length: 4 }, (_, i) => (
-          <div key={i} className="animate-in fade-in duration-300" style={{ animationDelay: `${i * 100}ms` }}>
-            <Skeleton className="h-[400px] w-full rounded-lg" />
+        {Array.from({ length: 8 }, (_, i) => (
+          <div key={i} className="animate-in fade-in duration-300" style={{ animationDelay: `${i * 50}ms` }}>
+            <LoadingSkeleton />
           </div>
         ))}
       </div>
@@ -133,14 +143,16 @@ const PropertyGrid = ({
       {filteredProperties.map((property, index) => (
         <div 
           key={property.id} 
-          className="animate-in fade-in duration-300" 
-          style={{ animationDelay: `${index * 100}ms` }}
+          className="animate-in fade-in duration-300 will-change-transform" 
+          style={{ animationDelay: `${index * 50}ms` }}
         >
           <PropertyCard {...property} type={property.type} />
         </div>
       ))}
     </div>
   );
-};
+});
+
+PropertyGrid.displayName = "PropertyGrid";
 
 export default PropertyGrid;

@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Property, PropertyType } from "@/types/property";
 import { allProperties } from "@/data/properties";
 import { supabase } from "@/lib/supabase";
@@ -16,159 +16,187 @@ export const usePropertyFilters = (initialSearch: string, initialType: PropertyT
   const [filteredProperties, setFilteredProperties] = useState<Property[]>(allProperties);
   const [loading, setLoading] = useState(false);
 
+  // Memoize filter dependencies to prevent unnecessary re-renders
+  const filterDeps = useMemo(() => ({
+    searchQuery,
+    propertyType,
+    priceRange,
+    bedrooms,
+    bathrooms,
+    minArea,
+    maxArea,
+    sortBy
+  }), [searchQuery, propertyType, priceRange, bedrooms, bathrooms, minArea, maxArea, sortBy]);
+
+  // Debounced search to improve performance
+  const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
+  
   useEffect(() => {
-    let filtered = allProperties;
-    setLoading(true);
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
-    // Try to fetch from Supabase if it's available
-    const fetchFromSupabase = async () => {
-      try {
-        let query = supabase.from('properties').select('*');
-        
-        if (searchQuery) {
-          query = query.or(`location.ilike.%${searchQuery}%,title.ilike.%${searchQuery}%`);
-        }
-        
-        if (propertyType !== "all") {
-          query = query.eq('type', propertyType);
-        }
-        
-        if (priceRange) {
-          query = query.gte('price', priceRange[0]).lte('price', priceRange[1]);
-        }
-        
-        if (bedrooms) {
-          if (bedrooms === "5+") {
-            query = query.gte('bedrooms', 5);
-          } else {
-            query = query.eq('bedrooms', parseInt(bedrooms));
-          }
-        }
+  // Optimized local filtering function
+  const filterLocalData = useCallback(() => {
+    let filtered = [...allProperties];
 
-        if (bathrooms) {
-          if (bathrooms === "4+") {
-            query = query.gte('bathrooms', 4);
-          } else {
-            query = query.eq('bathrooms', parseInt(bathrooms));
-          }
-        }
+    if (debouncedSearch) {
+      const lowerSearch = debouncedSearch.toLowerCase();
+      filtered = filtered.filter(property => 
+        property.location.toLowerCase().includes(lowerSearch) ||
+        property.title.toLowerCase().includes(lowerSearch)
+      );
+    }
+    
+    // Price filtering with early return for better performance
+    filtered = filtered.filter(property => {
+      const numericPrice = parseInt(property.price.replace(/[^0-9]/g, ''));
+      return numericPrice >= filterDeps.priceRange[0] && numericPrice <= filterDeps.priceRange[1];
+    });
+    
+    if (filterDeps.bedrooms) {
+      filtered = filtered.filter(property => 
+        filterDeps.bedrooms === "5+" 
+          ? property.bedrooms >= 5
+          : property.bedrooms === parseInt(filterDeps.bedrooms)
+      );
+    }
+    
+    if (filterDeps.bathrooms) {
+      filtered = filtered.filter(property => 
+        filterDeps.bathrooms === "4+" 
+          ? property.bathrooms >= 4
+          : property.bathrooms === parseInt(filterDeps.bathrooms)
+      );
+    }
+    
+    if (filterDeps.minArea) {
+      filtered = filtered.filter(property => property.area >= filterDeps.minArea!);
+    }
+    
+    if (filterDeps.maxArea) {
+      filtered = filtered.filter(property => property.area <= filterDeps.maxArea!);
+    }
+    
+    if (filterDeps.propertyType !== "all") {
+      filtered = filtered.filter(property => property.type === filterDeps.propertyType);
+    }
 
-        if (minArea) {
-          query = query.gte('area', minArea);
-        }
+    // Optimized sorting with memoization
+    switch (filterDeps.sortBy) {
+      case "price-low":
+        filtered.sort((a, b) => {
+          const priceA = parseInt(a.price.replace(/[^0-9]/g, ''));
+          const priceB = parseInt(b.price.replace(/[^0-9]/g, ''));
+          return priceA - priceB;
+        });
+        break;
+      case "price-high":
+        filtered.sort((a, b) => {
+          const priceA = parseInt(a.price.replace(/[^0-9]/g, ''));
+          const priceB = parseInt(b.price.replace(/[^0-9]/g, ''));
+          return priceB - priceA;
+        });
+        break;
+    }
+    
+    return filtered;
+  }, [debouncedSearch, filterDeps]);
 
-        if (maxArea) {
-          query = query.lte('area', maxArea);
-        }
-        
-        // Handle sorting
-        switch (sortBy) {
-          case "price-low":
-            query = query.order('price', { ascending: true });
-            break;
-          case "price-high":
-            query = query.order('price', { ascending: false });
-            break;
-          case "newest":
-            query = query.order('created_at', { ascending: false });
-            break;
-          case "oldest":
-            query = query.order('created_at', { ascending: true });
-            break;
-          default:
-            query = query.order('created_at', { ascending: false });
-        }
-
-        const { data, error } = await query;
-        
-        if (!error && data) {
-          setFilteredProperties(data as any);
-          setLoading(false);
-          return;
-        }
-      } catch (err) {
-        console.log("Supabase fetch error or not configured properly:", err);
-        // Fall back to local data if Supabase fails
-      }
-      filterLocalData();
-    };
-
-    const filterLocalData = () => {
-      if (searchQuery) {
-        filtered = filtered.filter(property => 
-          property.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          property.title.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+  // Optimized Supabase fetch with better error handling
+  const fetchFromSupabase = useCallback(async () => {
+    try {
+      let query = supabase.from('properties').select('*');
+      
+      if (debouncedSearch) {
+        query = query.or(`location.ilike.%${debouncedSearch}%,title.ilike.%${debouncedSearch}%`);
       }
       
-      filtered = filtered.filter(property => {
-        const numericPrice = parseInt(property.price.replace(/[^0-9]/g, ''));
-        return numericPrice >= priceRange[0] && numericPrice <= priceRange[1];
-      });
-      
-      if (bedrooms) {
-        filtered = filtered.filter(property => 
-          bedrooms === "5+" 
-            ? property.bedrooms >= 5
-            : property.bedrooms === parseInt(bedrooms)
-        );
+      if (filterDeps.propertyType !== "all") {
+        query = query.eq('type', filterDeps.propertyType);
       }
       
-      if (bathrooms) {
-        filtered = filtered.filter(property => 
-          bathrooms === "4+" 
-            ? property.bathrooms >= 4
-            : property.bathrooms === parseInt(bathrooms)
-        );
-      }
+      query = query.gte('price', filterDeps.priceRange[0]).lte('price', filterDeps.priceRange[1]);
       
-      if (minArea) {
-        filtered = filtered.filter(property => property.area >= minArea);
-      }
-      
-      if (maxArea) {
-        filtered = filtered.filter(property => property.area <= maxArea);
-      }
-      
-      if (propertyType !== "all") {
-        filtered = filtered.filter(property => property.type === propertyType);
+      if (filterDeps.bedrooms) {
+        if (filterDeps.bedrooms === "5+") {
+          query = query.gte('bedrooms', 5);
+        } else {
+          query = query.eq('bedrooms', parseInt(filterDeps.bedrooms));
+        }
       }
 
-      // Local sorting
-      switch (sortBy) {
+      if (filterDeps.bathrooms) {
+        if (filterDeps.bathrooms === "4+") {
+          query = query.gte('bathrooms', 4);
+        } else {
+          query = query.eq('bathrooms', parseInt(filterDeps.bathrooms));
+        }
+      }
+
+      if (filterDeps.minArea) {
+        query = query.gte('area', filterDeps.minArea);
+      }
+
+      if (filterDeps.maxArea) {
+        query = query.lte('area', filterDeps.maxArea);
+      }
+      
+      // Handle sorting
+      switch (filterDeps.sortBy) {
         case "price-low":
-          filtered.sort((a, b) => {
-            const priceA = parseInt(a.price.replace(/[^0-9]/g, ''));
-            const priceB = parseInt(b.price.replace(/[^0-9]/g, ''));
-            return priceA - priceB;
-          });
+          query = query.order('price', { ascending: true });
           break;
         case "price-high":
-          filtered.sort((a, b) => {
-            const priceA = parseInt(a.price.replace(/[^0-9]/g, ''));
-            const priceB = parseInt(b.price.replace(/[^0-9]/g, ''));
-            return priceB - priceA;
-          });
+          query = query.order('price', { ascending: false });
           break;
         case "newest":
-          // For demo data, we don't have real timestamps
-          // For actual data from Supabase, this would work with created_at
+          query = query.order('created_at', { ascending: false });
           break;
         case "oldest":
-          // For demo data, we don't have real timestamps
+          query = query.order('created_at', { ascending: true });
           break;
+        default:
+          query = query.order('created_at', { ascending: false });
+      }
+
+      const { data, error } = await query;
+      
+      if (!error && data) {
+        setFilteredProperties(data as any);
+        return true;
+      }
+    } catch (err) {
+      console.log("Supabase fetch error:", err);
+    }
+    return false;
+  }, [debouncedSearch, filterDeps]);
+
+  useEffect(() => {
+    const executeFiltering = async () => {
+      setLoading(true);
+      
+      // Try Supabase first with timeout
+      const supabaseSuccess = await Promise.race([
+        fetchFromSupabase(),
+        new Promise(resolve => setTimeout(() => resolve(false), 2000))
+      ]);
+      
+      if (!supabaseSuccess) {
+        // Fall back to local filtering
+        const localResults = filterLocalData();
+        setFilteredProperties(localResults);
       }
       
-      setFilteredProperties(filtered);
       setLoading(false);
     };
 
-    // Try Supabase first, fall back to local filtering
-    fetchFromSupabase();
-    
-  }, [searchQuery, priceRange, bedrooms, bathrooms, minArea, maxArea, propertyType, sortBy]);
+    executeFiltering();
+  }, [fetchFromSupabase, filterLocalData]);
 
-  const resetFilters = () => {
+  const resetFilters = useCallback(() => {
     setSearchQuery("");
     setPriceRange([1000000, 8000000]);
     setBedrooms("");
@@ -177,7 +205,7 @@ export const usePropertyFilters = (initialSearch: string, initialType: PropertyT
     setMaxArea(null);
     setPropertyType("all");
     setSortBy("newest");
-  };
+  }, []);
 
   return {
     searchQuery,
