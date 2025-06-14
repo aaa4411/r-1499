@@ -53,9 +53,11 @@ const PropertyGrid = memo(({
       return;
     }
 
+    // Use requestAnimationFrame for smoother loading
     const loadProperties = () => {
       if (propProperties) {
         if (fromSupabase) {
+          // Convert Supabase properties to frontend properties
           const convertedProperties = (propProperties as SupabaseProperty[]).map(
             mapSupabasePropertyToProperty
           );
@@ -64,12 +66,12 @@ const PropertyGrid = memo(({
           setProperties(propProperties as Property[]);
         }
       } else {
-        // Default properties with high-quality sample images
+        // Default properties for demo
         setProperties([
           {
             id: "1",
-            image: "https://images.unsplash.com/photo-1613977344957-1b6adb2a46b1?auto=format&q=75&fit=crop&w=800",
-            title: "Modern Mountain Retreat",
+            image: "https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&q=75&fit=crop&w=800",
+            title: "Forest Retreat",
             location: "Aspen, Colorado",
             price: "$2,450,000",
             bedrooms: 4,
@@ -79,8 +81,8 @@ const PropertyGrid = memo(({
           },
           {
             id: "2",
-            image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&q=75&fit=crop&w=800",
-            title: "Contemporary Villa",
+            image: "https://images.unsplash.com/photo-1524230572899-a752b3835840?auto=format&q=75&fit=crop&w=800",
+            title: "Modern Villa",
             location: "Beverly Hills, CA",
             price: "$5,900,000",
             bedrooms: 6,
@@ -90,8 +92,8 @@ const PropertyGrid = memo(({
           },
           {
             id: "3",
-            image: "https://images.unsplash.com/photo-1600047509358-9dc75507daeb?auto=format&q=75&fit=crop&w=800",
-            title: "Urban Penthouse",
+            image: "https://images.unsplash.com/photo-1433832597046-4f10e10ac764?auto=format&q=75&fit=crop&w=800",
+            title: "Urban Penthouse for Rent",
             location: "Manhattan, NY",
             price: "$15,000",
             bedrooms: 3,
@@ -101,8 +103,8 @@ const PropertyGrid = memo(({
           },
           {
             id: "4",
-            image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&q=75&fit=crop&w=800",
-            title: "Lakefront Estate",
+            image: "https://images.unsplash.com/photo-1486718448742-163732cd1544?auto=format&q=75&fit=crop&w=800",
+            title: "Lake House",
             location: "Lake Tahoe, NV",
             price: "$4,200,000",
             bedrooms: 5,
@@ -110,55 +112,12 @@ const PropertyGrid = memo(({
             area: 3900,
             type: 'sale'
           },
-          {
-            id: "5",
-            image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&q=75&fit=crop&w=800",
-            title: "Beachfront Paradise",
-            location: "Malibu, CA",
-            price: "$7,800,000",
-            bedrooms: 5,
-            bathrooms: 6,
-            area: 4500,
-            type: 'sale'
-          },
-          {
-            id: "6",
-            image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&q=75&fit=crop&w=800",
-            title: "Desert Oasis",
-            location: "Scottsdale, AZ",
-            price: "$3,200,000",
-            bedrooms: 4,
-            bathrooms: 4,
-            area: 3800,
-            type: 'sale'
-          },
-          {
-            id: "7",
-            image: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&q=75&fit=crop&w=800",
-            title: "City Loft Rental",
-            location: "San Francisco, CA",
-            price: "$8,500",
-            bedrooms: 2,
-            bathrooms: 2,
-            area: 1800,
-            type: 'rent'
-          },
-          {
-            id: "8",
-            image: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&q=75&fit=crop&w=800",
-            title: "Historic Mansion",
-            location: "Charleston, SC",
-            price: "$2,900,000",
-            bedrooms: 6,
-            bathrooms: 5,
-            area: 5200,
-            type: 'sale'
-          },
         ]);
       }
       setIsLoading(false);
     };
 
+    // Optimized loading with reduced delay
     const timer = setTimeout(() => {
       requestAnimationFrame(loadProperties);
     }, 150);

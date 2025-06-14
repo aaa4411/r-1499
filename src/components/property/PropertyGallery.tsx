@@ -1,3 +1,4 @@
+
 import { useState, useCallback, useEffect, useRef } from "react";
 import { 
   Carousel, 
@@ -19,18 +20,9 @@ const PropertyGallery = ({ images, title }: PropertyGalleryProps) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [api, setApi] = useState<CarouselApi>();
   const [imagesLoaded, setImagesLoaded] = useState<Record<number, boolean>>({});
-  const [imageQueue, setImageQueue] = useState<number[]>([0, 1]);
+  const [imageQueue, setImageQueue] = useState<number[]>([0, 1]); // Start with first two images
   const observerRef = useRef<IntersectionObserver | null>(null);
   const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
-
-  // Use sample images if no images provided
-  const displayImages = images.length > 0 ? images : [
-    "https://images.unsplash.com/photo-1600047509358-9dc75507daeb?auto=format&q=75&fit=crop&w=1200",
-    "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&q=75&fit=crop&w=1200",
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&q=75&fit=crop&w=1200",
-    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&q=75&fit=crop&w=1200",
-    "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&q=75&fit=crop&w=1200"
-  ];
 
   // Handle thumbnail click
   const handleThumbnailClick = (index: number) => {
@@ -39,7 +31,7 @@ const PropertyGallery = ({ images, title }: PropertyGalleryProps) => {
     
     // Add the next few images to the queue if they're not already loaded
     const nextImagesToLoad = [index, index + 1, index + 2].filter(
-      i => i < displayImages.length && !imagesLoaded[i]
+      i => i < images.length && !imagesLoaded[i]
     );
     
     if (nextImagesToLoad.length > 0) {
@@ -55,13 +47,13 @@ const PropertyGallery = ({ images, title }: PropertyGalleryProps) => {
     
     // Load the next few images after the current one
     const nextImagesToLoad = [selectedIndex + 1, selectedIndex + 2, selectedIndex + 3].filter(
-      i => i < displayImages.length && !imagesLoaded[i]
+      i => i < images.length && !imagesLoaded[i]
     );
     
     if (nextImagesToLoad.length > 0) {
       setImageQueue(prev => [...new Set([...prev, ...nextImagesToLoad])]);
     }
-  }, [api, displayImages.length, imagesLoaded]);
+  }, [api, images.length, imagesLoaded]);
 
   // Image load handler
   const handleImageLoad = (index: number) => {
@@ -110,8 +102,8 @@ const PropertyGallery = ({ images, title }: PropertyGalleryProps) => {
 
   // Initialize image refs
   useEffect(() => {
-    imageRefs.current = imageRefs.current.slice(0, displayImages.length * 2); // For both main carousel and thumbnails
-  }, [displayImages.length]);
+    imageRefs.current = imageRefs.current.slice(0, images.length * 2); // For both main carousel and thumbnails
+  }, [images.length]);
 
   return (
     <div className="space-y-4">
@@ -126,7 +118,7 @@ const PropertyGallery = ({ images, title }: PropertyGalleryProps) => {
           setApi={setApi}
         >
           <CarouselContent>
-            {displayImages.map((image, index) => (
+            {images.map((image, index) => (
               <CarouselItem key={index} className="overflow-hidden rounded-lg aspect-[16/9] relative">
                 {!imagesLoaded[index] && (
                   <div className="w-full h-full absolute inset-0 bg-slate-100 animate-pulse">
@@ -163,7 +155,7 @@ const PropertyGallery = ({ images, title }: PropertyGalleryProps) => {
 
       {/* Thumbnails */}
       <div className="grid grid-cols-5 gap-2">
-        {displayImages.map((image, index) => (
+        {images.map((image, index) => (
           <div 
             key={index}
             className={cn(
@@ -173,19 +165,19 @@ const PropertyGallery = ({ images, title }: PropertyGalleryProps) => {
             onClick={() => handleThumbnailClick(index)}
           >
             <div className="relative w-full h-full">
-              {!imagesLoaded[index + displayImages.length] && (
+              {!imagesLoaded[index + images.length] && (
                 <Skeleton className="w-full h-full absolute inset-0 bg-gray-200" />
               )}
               <img 
-                ref={el => imageRefs.current[index + displayImages.length] = el}
+                ref={el => imageRefs.current[index + images.length] = el}
                 data-src={`${image}?auto=format&q=60&fit=crop&w=150`}
                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                 alt={`${title} - thumbnail ${index + 1}`} 
                 className={cn(
                   "w-full h-full object-cover transition-opacity duration-300",
-                  imagesLoaded[index + displayImages.length] ? "opacity-100" : "opacity-0"
+                  imagesLoaded[index + images.length] ? "opacity-100" : "opacity-0"
                 )}
-                onLoad={() => handleImageLoad(index + displayImages.length)}
+                onLoad={() => handleImageLoad(index + images.length)}
                 loading="lazy"
               />
             </div>
