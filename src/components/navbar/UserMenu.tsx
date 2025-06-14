@@ -29,7 +29,7 @@ export const UserMenu: React.FC = () => {
       <div className="flex items-center space-x-3">
         <Button
           variant="ghost"
-          className="text-gray-900 hover:bg-gray-100 hover:text-gray-700 transition-all duration-200 hover:scale-105"
+          className="text-white hover:bg-white/10 transition-all duration-200 hover:scale-105"
           onClick={() => navigate("/login")}
         >
           <LogIn className="h-4 w-4 mr-2" />
@@ -37,7 +37,7 @@ export const UserMenu: React.FC = () => {
         </Button>
         <Button 
           variant="outline" 
-          className="text-white bg-gray-900 border-gray-900 hover:bg-gray-800 hover:border-gray-800 font-semibold shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg"
+          className="text-black border-white bg-white hover:bg-white/90 font-semibold shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg"
           onClick={() => navigate("/register")}
         >
           Sign Up
@@ -49,8 +49,8 @@ export const UserMenu: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative rounded-full overflow-hidden bg-gray-100 hover:bg-gray-200 transition-all duration-200 hover:scale-110">
-          <UserCircle className="h-5 w-5 text-gray-900" />
+        <Button variant="ghost" size="icon" className="relative rounded-full overflow-hidden bg-white/10 hover:bg-white/20 transition-all duration-200 hover:scale-110">
+          <UserCircle className="h-5 w-5 text-white" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56 bg-white border shadow-lg z-50">
@@ -61,7 +61,7 @@ export const UserMenu: React.FC = () => {
         <DropdownMenuSeparator />
         <DropdownMenuItem 
           onClick={() => navigate("/dashboard")}
-          className="hover:bg-gray-50 cursor-pointer transition-colors"
+          className="hover:bg-estate-50 cursor-pointer transition-colors"
         >
           <UserCircle className="h-4 w-4 mr-2" />
           Dashboard
@@ -69,7 +69,7 @@ export const UserMenu: React.FC = () => {
         {isAdmin() && (
           <DropdownMenuItem 
             onClick={() => navigate("/admin")}
-            className="hover:bg-gray-50 cursor-pointer transition-colors"
+            className="hover:bg-estate-50 cursor-pointer transition-colors"
           >
             <Shield className="h-4 w-4 mr-2" />
             Admin Panel
@@ -78,7 +78,7 @@ export const UserMenu: React.FC = () => {
         <DropdownMenuSeparator />
         <DropdownMenuItem 
           onClick={handleSignOut}
-          className="hover:bg-gray-50 cursor-pointer transition-colors"
+          className="hover:bg-estate-50 cursor-pointer transition-colors"
         >
           <LogOut className="h-4 w-4 mr-2" />
           Sign Out

@@ -3,6 +3,7 @@ import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminRoles } from '@/hooks/useAdminRoles';
 import { NavLink } from './NavLink';
+import { UserMenu } from './UserMenu';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -68,11 +69,11 @@ export const DesktopNavigation: React.FC = () => {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-700 focus:bg-gray-50 focus:text-gray-700 data-[active]:bg-gray-50 data-[state=open]:bg-gray-50 p-0 font-medium">
+            <NavigationMenuTrigger className="bg-transparent text-white hover:bg-transparent hover:text-white/80 focus:bg-transparent focus:text-white/80 data-[active]:bg-transparent data-[state=open]:bg-transparent p-0 font-medium">
               Services
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[250px] bg-white text-black rounded-lg shadow-lg border">
+              <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[250px] bg-white text-black rounded-lg shadow-lg">
                 <ListItem to="/services" title="Real Estate Services">
                   Buy, sell, and manage properties.
                 </ListItem>
@@ -88,6 +89,8 @@ export const DesktopNavigation: React.FC = () => {
       <NavLink to="/about">About</NavLink>
       <NavLink to="/#testimonials">Testimonials</NavLink>
       <NavLink to="/contact">Contact</NavLink>
+      
+      <UserMenu />
     </div>
   );
 };

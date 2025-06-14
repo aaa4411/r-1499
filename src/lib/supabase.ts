@@ -26,13 +26,9 @@ export type PropertyInsert = {
   images?: string[];
   features?: string[];
   coordinates?: { lat: number; lng: number };
-  status?: 'pending' | 'approved' | 'rejected' | 'featured' | 'active' | 'suspended';
-  featured?: boolean;
 };
 
 export type Property = PropertyInsert & {
   id: string;
   created_at: string;
-  status?: 'pending' | 'approved' | 'rejected' | 'featured' | 'active' | 'suspended';
-  featured?: boolean;
 };
