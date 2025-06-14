@@ -9,7 +9,7 @@ export interface Property {
   bathrooms: number;
   area: number;
   type: 'sale' | 'rent';
-  status?: string;
+  status?: 'pending' | 'approved' | 'rejected' | 'featured' | 'active' | 'suspended';
   featured?: boolean;
 }
 
