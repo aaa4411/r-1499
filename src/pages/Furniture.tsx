@@ -369,7 +369,12 @@ const Furniture = () => {
               <CardFooter>
                 <Button 
                   className="w-full bg-estate-800 hover:bg-estate-700"
-                  onClick={() => document.querySelector('[data-sheet-trigger="true"]')?.click()}
+                  onClick={() => {
+                    const triggerEl = document.querySelector('[data-sheet-trigger="true"]');
+                    if (triggerEl && "click" in triggerEl && typeof (triggerEl as HTMLElement).click === "function") {
+                      (triggerEl as HTMLElement).click();
+                    }
+                  }}
                 >
                   Schedule Service
                 </Button>
