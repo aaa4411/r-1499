@@ -180,7 +180,7 @@ export const FilterSidebar = ({
                 <SelectValue placeholder="Any" />
               </SelectTrigger>
               <SelectContent className="bg-white z-50 border shadow-lg">
-                <SelectItem value="" className="hover:bg-estate-50 cursor-pointer">Any</SelectItem>
+                <SelectItem value="any" className="hover:bg-estate-50 cursor-pointer">Any</SelectItem>
                 <SelectItem value="1" className="hover:bg-estate-50 cursor-pointer">1</SelectItem>
                 <SelectItem value="2" className="hover:bg-estate-50 cursor-pointer">2</SelectItem>
                 <SelectItem value="3" className="hover:bg-estate-50 cursor-pointer">3</SelectItem>
@@ -197,7 +197,7 @@ export const FilterSidebar = ({
                 <SelectValue placeholder="Any" />
               </SelectTrigger>
               <SelectContent className="bg-white z-50 border shadow-lg">
-                <SelectItem value="" className="hover:bg-estate-50 cursor-pointer">Any</SelectItem>
+                <SelectItem value="any" className="hover:bg-estate-50 cursor-pointer">Any</SelectItem>
                 <SelectItem value="1" className="hover:bg-estate-50 cursor-pointer">1</SelectItem>
                 <SelectItem value="2" className="hover:bg-estate-50 cursor-pointer">2</SelectItem>
                 <SelectItem value="3" className="hover:bg-estate-50 cursor-pointer">3</SelectItem>

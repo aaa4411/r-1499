@@ -8,8 +8,8 @@ export const usePropertyFilters = (initialSearch: string, initialType: PropertyT
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [propertyType, setPropertyType] = useState<PropertyType>(initialType);
   const [priceRange, setPriceRange] = useState<[number, number]>([1000000, 8000000]);
-  const [bedrooms, setBedrooms] = useState<string>("");
-  const [bathrooms, setBathrooms] = useState<string>("");
+  const [bedrooms, setBedrooms] = useState<string>("any");
+  const [bathrooms, setBathrooms] = useState<string>("any");
   const [minArea, setMinArea] = useState<number | null>(null);
   const [maxArea, setMaxArea] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState<string>("newest");
@@ -199,8 +199,8 @@ export const usePropertyFilters = (initialSearch: string, initialType: PropertyT
   const resetFilters = useCallback(() => {
     setSearchQuery("");
     setPriceRange([1000000, 8000000]);
-    setBedrooms("");
-    setBathrooms("");
+    setBedrooms("any");
+    setBathrooms("any");
     setMinArea(null);
     setMaxArea(null);
     setPropertyType("all");
