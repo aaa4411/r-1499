@@ -7,6 +7,7 @@ import { AdminStatsCards } from '@/components/admin/AdminStatsCards';
 import { AdminPropertyManagement } from '@/components/admin/AdminPropertyManagement';
 import { AdminUserManagement } from '@/components/admin/AdminUserManagement';
 import { AdminActivityLog } from '@/components/admin/AdminActivityLog';
+import { AdminAnalytics } from '@/components/admin/AdminAnalytics';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield } from 'lucide-react';
@@ -79,9 +80,10 @@ export const AdminDashboard: React.FC = () => {
       />
 
       <Tabs defaultValue="properties" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="properties">Property Management</TabsTrigger>
           <TabsTrigger value="users">User Management</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="activity">Activity Log</TabsTrigger>
         </TabsList>
 
@@ -100,6 +102,10 @@ export const AdminDashboard: React.FC = () => {
             onAssignRole={assignRole}
             onRemoveRole={removeRole}
           />
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-6">
+          <AdminAnalytics />
         </TabsContent>
 
         <TabsContent value="activity">
