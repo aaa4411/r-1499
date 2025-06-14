@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { 
@@ -17,8 +18,11 @@ import PropertyFeatures from "@/components/property/PropertyFeatures";
 import PropertyDescription from "@/components/property/PropertyDescription";
 import PropertyActions from "@/components/property/PropertyActions";
 import PropertyMap from "@/components/property/PropertyMap";
+import { PropertyStatusBadge } from "@/components/property/PropertyStatusBadge";
 import { properties } from "@/data/propertyDetails";
 import { useProperties } from "@/hooks/useProperties";
+import { useAuth } from "@/hooks/useAuth";
+import { useAdminRoles } from "@/hooks/useAdminRoles";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,6 +33,8 @@ const PropertyDetails = () => {
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [isRental, setIsRental] = useState(false);
   const { getPropertyById } = useProperties();
+  const { user } = useAuth();
+  const { isAdmin } = useAdminRoles();
   
   useEffect(() => {
     const fetchProperty = async () => {
@@ -73,6 +79,8 @@ const PropertyDetails = () => {
   const numericPrice = parseInt(price?.replace(/[^0-9]/g, "") || "0");
   const monthlyRent = Math.round(numericPrice * 0.004);
   const propertyId = property.id || id || "1";
+  const isOwner = user?.id === property.user_id;
+  const showStatusBadges = isAdmin() || isOwner;
   
   const nearbyAmenities = [
     { type: "School", name: "Lincoln Elementary School", distance: "0.5 miles", icon: School },
@@ -181,6 +189,21 @@ const PropertyDetails = () => {
               price={price}
               monthlyRent={monthlyRent}
             />
+            
+            {/* Status badges for property owners and admins */}
+            {showStatusBadges && (property.status || property.featured) && (
+              <div className="flex flex-wrap gap-2">
+                {property.featured && (
+                  <PropertyStatusBadge 
+                    status={property.status || 'approved'} 
+                    featured={true}
+                  />
+                )}
+                {!property.featured && property.status && property.status !== 'approved' && (
+                  <PropertyStatusBadge status={property.status} />
+                )}
+              </div>
+            )}
             
             <PropertyFeatures 
               bedrooms={property.bedrooms} 

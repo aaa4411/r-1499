@@ -26,6 +26,8 @@ export const mapSupabasePropertyToProperty = (property: SupabaseProperty): Prope
     bathrooms: property.bathrooms,
     area: property.area,
     type: property.type,
+    status: property.status,
+    featured: property.featured,
   };
 };
 
@@ -35,6 +37,7 @@ interface PropertyGridProps {
   filterType?: 'sale' | 'rent' | 'all';
   fromSupabase?: boolean;
   onAddToCompare?: (property: Property) => void;
+  showAdminBadges?: boolean;
 }
 
 const PropertyGrid = memo(({ 
@@ -42,7 +45,8 @@ const PropertyGrid = memo(({
   loading = false, 
   filterType = 'all',
   fromSupabase = false,
-  onAddToCompare
+  onAddToCompare,
+  showAdminBadges = false
 }: PropertyGridProps) => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(loading);
@@ -77,7 +81,9 @@ const PropertyGrid = memo(({
             bedrooms: 4,
             bathrooms: 3,
             area: 3200,
-            type: 'sale'
+            type: 'sale',
+            status: 'approved',
+            featured: true
           },
           {
             id: "2",
@@ -88,7 +94,9 @@ const PropertyGrid = memo(({
             bedrooms: 6,
             bathrooms: 7,
             area: 6500,
-            type: 'sale'
+            type: 'sale',
+            status: 'approved',
+            featured: false
           },
           {
             id: "3",
@@ -99,7 +107,9 @@ const PropertyGrid = memo(({
             bedrooms: 3,
             bathrooms: 3.5,
             area: 2800,
-            type: 'rent'
+            type: 'rent',
+            status: 'pending',
+            featured: false
           },
           {
             id: "4",
@@ -110,7 +120,9 @@ const PropertyGrid = memo(({
             bedrooms: 5,
             bathrooms: 4,
             area: 3900,
-            type: 'sale'
+            type: 'sale',
+            status: 'approved',
+            featured: false
           },
         ]);
       }
@@ -152,7 +164,10 @@ const PropertyGrid = memo(({
           <PropertyCard 
             {...property} 
             type={property.type} 
+            status={property.status}
+            featured={property.featured}
             onAddToCompare={onAddToCompare}
+            showAdminBadges={showAdminBadges}
           />
         </div>
       ))}

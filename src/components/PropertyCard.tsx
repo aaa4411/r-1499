@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import FavoriteButton from "./FavoriteButton";
 import { Button } from "./ui/button";
 import VirtualTourModal from "./property/VirtualTourModal";
+import { PropertyStatusBadge } from "./property/PropertyStatusBadge";
 import { memo } from "react";
 
 interface PropertyCardProps {
@@ -17,8 +18,11 @@ interface PropertyCardProps {
   bathrooms?: number;
   area?: number;
   type?: 'sale' | 'rent';
+  status?: string;
+  featured?: boolean;
   onAddToCompare?: (property: any) => void;
   images?: string[];
+  showAdminBadges?: boolean;
 }
 
 const PropertyCard = memo(({ 
@@ -31,11 +35,14 @@ const PropertyCard = memo(({
   bathrooms,
   area,
   type = 'sale',
+  status = 'approved',
+  featured = false,
   onAddToCompare,
-  images = []
+  images = [],
+  showAdminBadges = false
 }: PropertyCardProps) => {
   const displayPrice = type === 'rent' ? `${price}/month` : price;
-  const propertyData = { id, image, title, location, price, bedrooms, bathrooms, area, type };
+  const propertyData = { id, image, title, location, price, bedrooms, bathrooms, area, type, status, featured };
 
   const handleAddToCompare = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -61,15 +68,28 @@ const PropertyCard = memo(({
             {/* Gradient overlay that appears on hover */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             
-            {/* Price Badge - Responsive sizing */}
-            <div className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-white/95 backdrop-blur-sm text-estate-800 px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium rounded-lg shadow-sm transform group-hover:scale-105 transition-transform duration-200">
-              {displayPrice}
+            {/* Status badges - Top left */}
+            <div className="absolute top-2 sm:top-3 left-2 sm:left-3 flex flex-col gap-1">
+              {/* Property type badge */}
+              <div className={`${type === 'sale' ? 'bg-blue-500/95' : 'bg-green-500/95'} backdrop-blur-sm text-white px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium rounded-lg flex items-center gap-1 shadow-sm transform group-hover:scale-105 transition-transform duration-200`}>
+                {type === 'sale' ? <Tag className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> : <Home className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
+                <span className="hidden xs:inline">{type === 'sale' ? 'For Sale' : 'For Rent'}</span>
+              </div>
+              
+              {/* Status badge - show for admins or non-approved properties */}
+              {(showAdminBadges || status !== 'approved' || featured) && (
+                <PropertyStatusBadge 
+                  status={status as any}
+                  featured={featured}
+                  size="sm"
+                  className="transform group-hover:scale-105 transition-transform duration-200"
+                />
+              )}
             </div>
             
-            {/* Type Badge - Responsive sizing */}
-            <div className={`absolute top-2 sm:top-3 left-2 sm:left-3 ${type === 'sale' ? 'bg-blue-500/95' : 'bg-green-500/95'} backdrop-blur-sm text-white px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium rounded-lg flex items-center gap-1 shadow-sm transform group-hover:scale-105 transition-transform duration-200`}>
-              {type === 'sale' ? <Tag className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> : <Home className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
-              <span className="hidden xs:inline">{type === 'sale' ? 'For Sale' : 'For Rent'}</span>
+            {/* Price Badge - Top right */}
+            <div className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-white/95 backdrop-blur-sm text-estate-800 px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium rounded-lg shadow-sm transform group-hover:scale-105 transition-transform duration-200">
+              {displayPrice}
             </div>
             
             {/* Mobile-first action buttons */}

@@ -11,6 +11,7 @@ import ResultsHeader from "@/components/properties/ResultsHeader";
 import PropertiesLayout from "@/components/properties/PropertiesLayout";
 import { usePropertyFilters } from "@/hooks/usePropertyFilters";
 import { usePropertyComparison } from "@/hooks/usePropertyComparison";
+import { useAdminRoles } from "@/hooks/useAdminRoles";
 import { useSearchParams } from "react-router-dom";
 import { PropertyType } from "@/types/property";
 import { useState } from "react";
@@ -23,6 +24,7 @@ const Properties = () => {
   const initialType = (searchParams.get("type") as PropertyType) || "all";
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const { isAdmin } = useAdminRoles();
   
   const {
     searchQuery,
@@ -163,6 +165,7 @@ const Properties = () => {
                   filterType={propertyType === "all" ? undefined : propertyType}
                   fromSupabase={true}
                   onAddToCompare={addToCompare}
+                  showAdminBadges={isAdmin()}
                 />
               </div>
             ) : (

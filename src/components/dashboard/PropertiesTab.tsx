@@ -27,6 +27,7 @@ const PropertiesTab = ({ properties, loading }: PropertiesTabProps) => {
             properties={properties} 
             loading={loading}
             fromSupabase={true}
+            showAdminBadges={true}
           />
         ) : (
           <div className="text-center py-12">
