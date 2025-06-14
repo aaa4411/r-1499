@@ -3,7 +3,6 @@ import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminRoles } from '@/hooks/useAdminRoles';
 import { NavLink } from './NavLink';
-import { UserMenu } from './UserMenu';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -89,8 +88,6 @@ export const DesktopNavigation: React.FC = () => {
       <NavLink to="/about">About</NavLink>
       <NavLink to="/#testimonials">Testimonials</NavLink>
       <NavLink to="/contact">Contact</NavLink>
-      
-      <UserMenu />
     </div>
   );
 };
