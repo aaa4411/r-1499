@@ -1,74 +1,72 @@
 
-import { MapPin } from "lucide-react";
-import SearchBar from "./SearchBar";
 import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
+import { ArrowRight, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
+import { FeatureBadge } from "./ui/feature-badge";
 
 const Hero = () => {
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center transform scale-105 animate-in zoom-in duration-700"
-        style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c')",
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/60 animate-in fade-in duration-1000" />
+    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-estate-900 via-estate-800 to-estate-700 overflow-hidden">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2071&q=80"
+          alt="Luxury home exterior"
+          className="w-full h-full object-cover opacity-40"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-estate-900/80 via-estate-800/60 to-estate-700/80" />
       </div>
-      
-      <div className="relative z-10 container mx-auto px-4 h-screen flex flex-col justify-center items-center">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Animated badge */}
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full mb-6 animate-in slide-in-from-top duration-700 delay-300">
-            <MapPin className="w-4 h-4 text-white animate-pulse" />
-            <span className="text-white/90 text-sm font-medium">Luxury Real Estate Solutions</span>
-          </div>
-          
-          {/* Animated main heading */}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-display text-white mb-6 leading-tight tracking-tight animate-in slide-in-from-left duration-1000 delay-500">
-            Find Your Dream
-            <br />
-            <span className="bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent animate-in slide-in-from-right duration-1000 delay-700">
-              Luxury Home
-            </span>
-          </h1>
-          
-          {/* Animated description */}
-          <p className="text-lg md:text-xl text-white/90 mb-12 max-w-2xl mx-auto leading-relaxed animate-in fade-in duration-1000 delay-900 drop-shadow-sm">
-            Discover exceptional properties and sustainable living spaces curated for modern lifestyles.
-          </p>
-          
-          {/* Animated search bar */}
-          <div className="max-w-2xl mx-auto backdrop-blur-md bg-white/5 p-2 rounded-2xl border border-white/10 animate-in slide-in-from-bottom duration-1000 delay-1100 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
-            <SearchBar />
-          </div>
+
+      {/* Content */}
+      <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Feature Badge */}
+        <div className="mb-6 flex justify-center">
+          <FeatureBadge icon={<MapPin className="h-4 w-4" />}>
+            Luxury Real Estate Solutions
+          </FeatureBadge>
         </div>
 
-        {/* Animated stats at bottom */}
-        <div className="absolute bottom-12 left-0 right-0 flex justify-center animate-in fade-in duration-1000 delay-1300">
-          <div className="grid grid-cols-3 gap-8 px-4">
-            {[
-              { label: "Properties", value: "1,500+", delay: "delay-1400" },
-              { label: "Happy Clients", value: "800+", delay: "delay-1500" },
-              { label: "Cities", value: "50+", delay: "delay-1600" }
-            ].map((stat, index) => (
-              <div 
-                key={index} 
-                className={`text-center transform hover:scale-110 transition-all duration-300 animate-in slide-in-from-bottom duration-700 ${stat.delay}`}
-              >
-                <p className="text-3xl font-display text-white mb-1 drop-shadow-lg">{stat.value}</p>
-                <p className="text-sm text-white/80 drop-shadow-sm">{stat.label}</p>
-              </div>
-            ))}
-          </div>
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold text-white mb-6 leading-tight">
+          Find Your Dream{" "}
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">
+            Luxury Home
+          </span>
+        </h1>
+        
+        <p className="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed">
+          Discover exceptional properties and sustainable living spaces curated for modern lifestyles.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+          <Link to="/properties">
+            <Button 
+              size="lg" 
+              className="bg-white text-estate-800 hover:bg-gray-100 font-semibold px-8 py-4 text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl w-full sm:w-auto"
+            >
+              Explore Properties
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
+          
+          <Link to="/contact">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="border-white text-white hover:bg-white hover:text-estate-800 font-semibold px-8 py-4 text-lg transition-all duration-300 hover:scale-105 backdrop-blur-sm w-full sm:w-auto"
+            >
+              Get Consultation
+            </Button>
+          </Link>
         </div>
-
-        {/* Floating elements for extra visual appeal */}
-        <div className="absolute top-1/4 left-10 w-20 h-20 bg-white/5 rounded-full animate-pulse opacity-30"></div>
-        <div className="absolute top-1/3 right-16 w-16 h-16 bg-white/5 rounded-full animate-ping opacity-20" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-1/4 left-1/4 w-12 h-12 bg-white/5 rounded-full animate-bounce opacity-25" style={{ animationDelay: '2s' }}></div>
       </div>
-    </div>
+
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
+          <div className="w-1 h-3 bg-white rounded-full mt-2"></div>
+        </div>
+      </div>
+    </section>
   );
 };
 
