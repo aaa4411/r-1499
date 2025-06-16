@@ -68,7 +68,7 @@ export const DesktopNavigation: React.FC = () => {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-700 focus:bg-gray-50 focus:text-gray-700 data-[active]:bg-gray-50 data-[state=open]:bg-gray-50 p-0 font-medium">
+            <NavigationMenuTrigger className="bg-transparent text-white hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white data-[active]:bg-white/10 data-[state=open]:bg-white/10 p-0 font-medium">
               Services
             </NavigationMenuTrigger>
             <NavigationMenuContent>
